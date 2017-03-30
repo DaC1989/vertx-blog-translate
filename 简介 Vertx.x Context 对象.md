@@ -1,6 +1,6 @@
 ## Vert.x Context简介
 
-英文原文：[An Introduction to the Vert.x Context Object]("http://vertx.io/blog/an-introduction-to-the-vert-x-context-object/")
+英文原文：[An Introduction to the Vert.x Context Object](http://vertx.io/blog/an-introduction-to-the-vert-x-context-object/)
 
 发表于2017年1月31日，原文作者 [millross](http://github.com/millross)
 
