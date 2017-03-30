@@ -101,6 +101,6 @@ toComplete.thenRun(() -> {
 
 vert.x 团队也提供了一篇优秀的关于 Vert.x eventloop 的博客，其中就有 context 的详细介绍  ：[Github](https://github.com/vietj/vertx-materials/blob/master/src/main/asciidoc/Demystifying_the_event_loop.adoc) 。
 
-### Thanks致谢
+### 致谢
 
 非常感谢 vert.x 核心小组发表在 github上的关于 eventloop 的详细介绍，同时也十分感谢 [Alexander Lehmann](https://twitter.com/alexlehm?lang=en) 耐心的回答我在 [Vert.x google group](https://groups.google.com/forum/#!forum/vertx) 提的那些弱智问题。
