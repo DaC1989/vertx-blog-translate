@@ -1,26 +1,22 @@
-## Vert.x Context简介
+原文：[An Introduction to the Vert.x Context Object](http://www.millross-consultants.com/vertx_context_object.html)
 
-英文原文：[An Introduction to the Vert.x Context Object](http://millross-consultants.com/vertx_context_object.html)
+原作者 [millross](http://github.com/millross)，更新于2017年10月29日
 
-发表于2017年1月31日，原文作者 [millross](http://github.com/millross)
-
-Vert.x Context 在保证 verticles 线程安全方面有着重要作用。大部分情况下，vert.x 开发者不需要直接与 Context 打交道。但有时候或许需要。这篇文章将会简单介绍 vert.x Context 类，包括为什么它很重要，以及什么时候你可能会希望直接使用它。这些，都基于作者在开发一个能集成在 vert.x 中的通用异步库的经验之上，总结而来的。
-
-##### 这篇文章，作者之前已经发表在 [blog post](http://www.millross-consultants.com/vertx_context_object.html)
+Vert.x 的 Context 对象在保证 verticles 的线程安全方面有着重要作用。大部分时候，vert.x 开发者不需要直接与 Context 打交道。本文将简要介绍vert.x Context 类的重要性，以及什么时候你可能会需要直接使用它。
 
 ## Vert.x 中的 Context 对象 - 简要介绍
 
 ### 介绍
 
-最近我一直在思考，如何构建一个异步版本的 [pac4j](http://www.pac4j.org/) 库，好让 [vertx-pac4j](https://github.com/pac4j/vertx-pac4j) 默认为 pac4j 的异步实现。
+最近我一直在思考，如何构建一个异步版本的 [pac4j](http://www.pac4j.org/) 库，并且想让 [vertx-pac4j](https://github.com/pac4j/vertx-pac4j) 作为 pac4j 的默认异步实现方式。
 
-我本来希望（显而易见的原因）pac4j 的异步版本不需要和某个特定的异步／非阻塞框架有强耦合。所以一开始我决定使用 [CompletableFuture](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html) 来暴露 API，用它来把结果包装在 future 对象里。但是，我后来选择了用 [vert.x](http://vertx.io/)框架来测试API。这让我必须好好学习 vert.x [Context](http://vertx.io/docs/apidocs/io/vertx/core/Context.html) ，因为它的很多方面我之前都不太明白。
+我本来希望 pac4j 的异步版本不需要和某个特定的异步/非阻塞框架有强耦合。所以一开始我决定使用 [CompletableFuture](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html) 来暴露 API，用它来把结果包装在 future 对象里。后来我选用了 [vert.x](http://vertx.io/) 框架来测试API，这让我必须好好学习 vert.x [Context](http://vertx.io/docs/apidocs/io/vertx/core/Context.html) 。
 
-##### 这篇文章的内容基于 vertx.x 3.3.3，有可能在vertx.x 的后续版本中将不再正确。
+##### 这篇文章的内容基于 vert.x 3.3.3，在vert.x 的后续版本中有可能将不再正确。
 
 ### 介绍 Context 类
 
-任何时候， 执行 vert.x [Handler](http://vertx.io/docs/apidocs/io/vertx/core/Handler.html) ，或者调用 verticle 的 start 方法和内部方法的，都与一个特定的 context 对象关联着。一般来说，一个 context 对象就是一个循环事件的上下文。所以必须和一个特定的 event loop 线程绑定（下面会提到一些异常情况）。Contexts 还是可传播的。当某段代码已经运行在一个context 中，若此时这段代码写了一个 handler，那这个 handler 会由相同的 context 来执行。这意味着，比如一个 verticle 对象的 start 方法中设置了一些event bus 的 handler（数量多少都一样），那么这些 handler 和这个 verticle 的 start 方法会在同一个 context 中被执行（所以说，对这个verticle对象来说，所有的 handler 共享一个 context）。
+当我们执行 vert.x 的 [Handler](http://vertx.io/docs/apidocs/io/vertx/core/Handler.html) ，或者调用 verticle 的 start 方法和内部方法的时候，这些操作都将与一个特定的 context 对象关联着。一般来说，一个 context 对象就是一个循环事件的上下文。所以必须和一个特定的 event loop 线程绑定（下面会提到一些异常情况）。Contexts 还是可传播的。当某段代码已经运行在一个context 中，若此时这段代码写了一个 handler，那这个 handler 会由相同的 context 来执行。这意味着，比如一个 verticle 对象的 start 方法中设置了一些event bus 的 handler（不论有多少handler），那么这些 handler 和这个 verticle 的 start 方法会在同一个 context 中被执行（所以说，对这个verticle对象来说，所有的 handler 共享一个 context）。
 
 图一显示了 non-worker 的 verticles，contexts 和 eventloop 线程之间的关系。
 
