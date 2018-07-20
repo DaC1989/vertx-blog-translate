@@ -22,7 +22,7 @@ Vert.x 的 Context 对象在保证 verticles 的线程安全方面有着重要�
 
 
 
-![Vertx Context/Thread/Verticle Relationships](http://vertx.io/assets/blog/vertx3-intro-to-context-object/VertxContextRelationships.png)
+![Vertx Context/Thread/Verticle Relationships](https://user-images.githubusercontent.com/25810981/43004024-0216b398-8c61-11e8-9ba7-1ee86acdcdaa.png)
 
 注意，每个 verticle 对象只会在 start 方法的时候，创建一个 context，这个 verticle 对象的所有 handler 都绑定在这个 context 上。并且，每个 context 只绑定在一个 event loop 线程上。可是，一个 event loop 线程却可以和多个 context 相绑定。
 
