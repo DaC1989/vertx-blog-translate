@@ -1,6 +1,6 @@
 原文：[An Introduction to the Vert.x Context Object](http://www.millross-consultants.com/vertx_context_object.html)
 
-原作者 [millross](http://github.com/millross)，更新于2017年10月29日
+原作者 [millross](http://github.com/millross)，原文更新于2017年10月29日
 
 其实大部分时候，vert.x 开发者并不需要直接与 Context 打交道。但我们还是有必要知道，Vert.x 的 Context 对象在保证 verticles 的线程安全方面有着重要作用。因为，说不定什么时候，你会需要直接使用它。
 
